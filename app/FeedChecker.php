@@ -34,6 +34,7 @@ class FeedChecker {
 
         $newItems = collect();
 
+        // for rss
         foreach ($rss->item as $item)
         {
             $uuid = (string) $item->guid ?? $item->link;
@@ -43,6 +44,21 @@ class FeedChecker {
             $newItems->push([
                 'title' => (string) $item->title,
                 'link' => (string) $item->link,
+                'uuid' => $uuid,
+            ]);
+
+            if (!$postedBefore) break;
+        }
+        // For atom
+        foreach ($rss->entry as $entry)
+        {
+            $uuid = (string) $entry->id;
+
+            if ($uuid === $postedBefore) break;
+
+            $newItems->push([
+                'title' => (string) $entry->title,
+                'link' => (string) $entry->link->attributes()->href,
                 'uuid' => $uuid,
             ]);
 
