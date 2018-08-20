@@ -18,16 +18,6 @@ class FeedChecker {
 
     public function __invoke()
     {
-        $test = [
-            "title" => "Dark Matter Candidates",
-              "link" => "https://xkcd.com/2035/",
-              "guid" => "https://xkcd.com/2035/",
-              "timestamp" => "1534737600",
-        ];
-
-        $this->post($test, TootFeed::first());
-        return;
-
         $feeds = TootFeed::all();
 
         foreach ($feeds as $feed)
@@ -57,7 +47,7 @@ class FeedChecker {
         $newItems = $newItems->reverse();
 
         $newItems->each(function($item) use ($feed) {
-          $this->post($item, $feed);
+            $this->post($item, $feed);
         });
     }
 
@@ -65,7 +55,9 @@ class FeedChecker {
     {
         $status = $this->outputGenerator->generate($item['title'], $item['link'], $feed->getOutput());
 
-        // TODO toot toot
+        $client = app(MastodonClient::class);
+
+        $client->toot($status);
     }
 
 }
