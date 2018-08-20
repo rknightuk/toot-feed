@@ -30,22 +30,29 @@ class FeedChecker {
     {
         $postedBefore = $feed->getLatest();
 
-        $rss = Feed::loadRss($feed->getUrl());
+        $rss = Feed::load($feed->getUrl());
 
         $newItems = collect();
 
         foreach ($rss->item as $item)
         {
-            if ($item->guid !== $postedBefore) {
-                $newItems->push((array) $item);
-            }
+            $uuid = (string) $item->guid ?? $item->link;
+
+            if ($uuid === $postedBefore) break;
+
+            $newItems->push([
+                'title' => (string) $item->title,
+                'link' => (string) $item->link,
+                'uuid' => $uuid,
+            ]);
+
             if (!$postedBefore) break;
         }
 
         if (!$newItems->count()) return;
 
         $latestItem = $newItems->first();
-        $feed->setLatest($latestItem['guid']);
+        $feed->setLatest($latestItem['uuid']);
         $feed->save();
 
         $newItems = $newItems->reverse();
