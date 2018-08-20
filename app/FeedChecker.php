@@ -30,7 +30,7 @@ class FeedChecker {
     {
         $postedBefore = $feed->getLatest();
 
-        $rss = Feed::load($feed->getUrl());
+        $rss = Feed::loadRss($feed->getUrl());
 
         $newItems = collect();
 
