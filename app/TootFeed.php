@@ -32,4 +32,9 @@ class TootFeed extends Model
     {
         return $this->latest;
     }
+
+    public function setLatest($guid)
+    {
+        $this->latest = $guid;
+    }
 }

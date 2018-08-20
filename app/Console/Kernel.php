@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\FeedChecker;
+use App\OutputGenerator;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -25,7 +26,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(new FeedChecker)->everyFifteenMinutes();
+        $schedule->call(new FeedChecker(app(OutputGenerator::class)))->everyFifteenMinutes();
     }
 
     /**

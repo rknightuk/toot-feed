@@ -44,6 +44,10 @@ class FeedChecker {
 
         if (!$newItems->count()) return;
 
+        $latestItem = $newItems->first();
+        $feed->setLatest($latestItem['guid']);
+        $feed->save();
+
         $newItems = $newItems->reverse();
 
         $newItems->each(function($item) use ($feed) {
